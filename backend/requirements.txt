@@ -1,8 +1,9 @@
 fastapi==0.115.12
 uvicorn[standard]==0.34.0
-SQLAlchemy==2.0.38
-psycopg[binary]==3.2.5
+SQLAlchemy==2.0.51
+psycopg[binary]==3.3.8
 pydantic-settings==2.7.1
-redis==5.2.1
+redis==8.1.0
 celery==5.4.0
 python-dotenv==1.0.1
+packaging==26.3

@@ -1,0 +1,62 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskflow-backend
+    env_file:
+      - ./backend/.env.docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      - taskflow-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskflow-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - taskflow-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:17
+    container_name: taskflow-db-compose
+    environment:
+      POSTGRES_USER: taskflow
+      POSTGRES_PASSWORD: taskflow123
+      POSTGRES_DB: taskflow_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - taskflow-postgres-data:/var/lib/postgresql/data
+    networks:
+      - taskflow-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: taskflow-redis-compose
+    ports:
+      - "6380:6379"
+    networks:
+      - taskflow-network
+    restart: unless-stopped
+
+networks:
+  taskflow-network:
+    external: true
+
+volumes:
+  taskflow-postgres-data:
+    external: true
